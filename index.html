@@ -171,7 +171,10 @@
         <div id="view-app" class="hidden">
             <div style="display:flex; justify-content:space-between; margin-bottom:15px; align-items:center;">
                 <span class="nav-user" id="user-display" style="font-weight:bold; color:var(--blue-dark);">Olá!</span>
-                <span class="btn-small" style="background:#ffebee; color:red;" onclick="logout()">Sair</span>
+                <div style="display: flex; gap: 8px;">
+                    <span class="btn-small" onclick="loadProfileForEdit()">Meu Perfil</span>
+                    <span class="btn-small" style="background:#ffebee; color:red;" onclick="logout()">Sair</span>
+                </div>
             </div>
 
             <div class="card">
@@ -236,6 +239,34 @@
                 <button class="btn" style="background-color: #28a745; margin-top:15px;" onclick="saveData()">SALVAR E FINALIZAR</button>
             </div>
 
+            <div id="view-profile" class="hidden">
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px; align-items:center;">
+                <h3>Editar Meus Dados</h3>
+                <span class="btn-small" onclick="showView('app')">Voltar</span>
+            </div>
+            
+            <div class="card">
+                <label>Nome</label> <input type="text" id="edit-nome">
+                <label>E-mail</label> <input type="email" id="edit-email">
+                <label>Whatsapp</label> <input type="text" id="edit-zap" onkeyup="handlePhone(event)">
+                <label>Empresa</label> <input type="text" id="edit-empresa">
+                <label>Cargo</label> <input type="text" id="edit-cargo">
+                <label>Senha</label> <input type="text" id="edit-pass">
+                
+                <label>Faturamento Mensal (Atual)</label>
+                <select id="edit-faturamento">
+                    <option value="Menor que 10k">Menor que R$ 10.000</option>
+                    <option value="Entre 10k e 30k">Entre R$ 10k e R$ 30k</option>
+                    <option value="Entre 30k e 60k">Entre R$ 30k e R$ 60k</option>
+                    <option value="Entre 60k e 100k">Entre R$ 60k e R$ 100k</option>
+                    <option value="Entre 100k e 500k">Entre R$ 100k e R$ 500k</option>
+                    <option value="Acima de 500k">Acima de R$ 500.000</option>
+                </select>
+
+                <label>Funcionários</label> <input type="number" id="edit-func">
+
+                <button class="btn" onclick="saveProfile()">Atualizar Cadastro</button>
+            </div>
         </div>
     </div>
 
@@ -346,6 +377,55 @@
                 set('calc-lucro-desejado', res.data.lucratividade);
                 set('calc-prolabore-atual', res.data.proLaboreRetirado);
                 set('calc-saidas-nao-op', res.data.saidasNaoOp);
+            }
+        }
+
+        async function loadProfileForEdit() {
+            const res = await apiCall({ action: 'getProfile', userId: currentUser });
+            if (res.status === 'success') {
+                const p = res.profile;
+                document.getElementById('edit-nome').value = p.nome;
+                document.getElementById('edit-email').value = p.email;
+                document.getElementById('edit-pass').value = p.password;
+                document.getElementById('edit-zap').value = p.whatsapp;
+                document.getElementById('edit-empresa').value = p.empresa;
+                document.getElementById('edit-cargo').value = p.cargo;
+                document.getElementById('edit-faturamento').value = p.faturamento;
+                document.getElementById('edit-func').value = p.funcionarios;
+                showView('profile');
+            }
+        }
+
+        async function saveProfile() {
+            const data = {
+                action: 'updateProfile',
+                userId: currentUser,
+                nome: document.getElementById('edit-nome').value,
+                email: document.getElementById('edit-email').value,
+                password: document.getElementById('edit-pass').value,
+                whatsapp: document.getElementById('edit-zap').value,
+                empresa: document.getElementById('edit-empresa').value,
+                cargo: document.getElementById('edit-cargo').value,
+                faturamento: document.getElementById('edit-faturamento').value,
+                funcionarios: document.getElementById('edit-func').value
+            };
+            const res = await apiCall(data);
+            if(res.status === 'success') {
+                alert('Perfil atualizado com sucesso!');
+                localStorage.setItem('4blue_name', data.nome);
+                
+                // Atualiza a TAG localmente se o faturamento mudou, para o pop-up vir correto
+                const highValue = ['Entre 100k e 500k', 'Acima de 500k'];
+                if (highValue.includes(data.faturamento)) {
+                    currentTag = "calculo-pro-labore-4blue-mql";
+                } else {
+                    currentTag = "calculo-pro-labore-4blue-nao-mql";
+                }
+                localStorage.setItem('4blue_tag', currentTag);
+                
+                showView('app');
+            } else {
+                alert(res.message);
             }
         }
 
@@ -479,9 +559,11 @@
 
         function openModalOferta() {
             const modal = document.getElementById('cta-modal');
-            const isMQL = currentTag && currentTag.includes('mql') && !currentTag.includes('nao-mql');
             
-            // Se a tag for 'calculo-pro-labore-4blue-mql' mostra MDL
+            // CORREÇÃO: Comparação exata para evitar confusão entre 'mql' e 'nao-mql'
+            // Se a tag for EXATAMENTE a de mql, ele é MQL. Caso contrário, é Não-MQL.
+            const isMQL = currentTag === "calculo-pro-labore-4blue-mql";
+            
             if (isMQL) {
                 document.getElementById('offer-mql').classList.remove('hidden');
                 document.getElementById('offer-low').classList.add('hidden');
