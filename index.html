@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo Pró-labore | 4blue</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', 'SEU_PIXEL_ID_AQUI');
+      fbq('track', 'PageView');
+    </script>
+
+    <style>
+        :root {
+            --blue-primary: #0072CE;
+            --blue-dark: #004882;
+            --bg-light: #F4F5FF;
+            --yellow: #F6BF00;
+        }
+        
+        body { font-family: 'Montserrat', sans-serif; background-color: #fff; color: #333; margin: 0; padding: 0; }
+        
+        .container { max-width: 500px; margin: 0 auto; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; }
+        
+        /* Header */
+        .header { text-align: center; margin-bottom: 30px; padding-top: 20px; }
+        .header h1 { color: var(--blue-primary); font-family: 'Montserrat', sans-serif; margin: 0; font-weight: 800; letter-spacing: -1px; }
+        
+        /* Cards & Forms */
+        .card { background: var(--bg-light); padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        
+        label { display: block; margin-top: 15px; font-size: 0.85em; color: var(--blue-dark); font-weight: 700; text-transform: uppercase; }
+        
+        input, select { width: 100%; padding: 14px; margin-top: 5px; border: 1px solid #ddd; border-radius: 8px; font-family: 'Montserrat'; box-sizing: border-box; font-size: 1em; background: #fff; }
+        input:focus, select:focus { outline: none; border-color: var(--blue-primary); }
+
+        .btn { width: 100%; padding: 16px; background-color: var(--blue-primary); color: white; border: none; border-radius: 50px; font-weight: bold; font-size: 1em; cursor: pointer; margin-top: 25px; transition: transform 0.1s; text-transform: uppercase; letter-spacing: 1px; }
+        .btn:active { transform: scale(0.98); }
+        .btn-outline { background: transparent; border: 2px solid var(--blue-primary); color: var(--blue-primary); margin-top: 10px; }
+        
+        .link { text-align: center; display: block; margin-top: 15px; color: var(--blue-primary); text-decoration: underline; cursor: pointer; font-size: 0.9em; }
+
+        /* Results */
+        .result-box { background: var(--blue-primary); color: white; padding: 30px; border-radius: 15px; text-align: center; margin-top: 20px; box-shadow: 0 10px 20px rgba(0,114,206,0.2); }
+        .result-value { font-size: 2.5em; font-weight: 800; color: var(--yellow); margin: 10px 0; }
+        
+        /* Utility */
+        .hidden { display: none !important; }
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); display: flex; justify-content: center; align-items: center; z-index: 999; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid var(--blue-primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .nav-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .nav-user { font-weight: 600; color: var(--blue-dark); }
+        .btn-small { padding: 5px 15px; font-size: 0.8em; border-radius: 20px; background: #eee; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div id="loading" class="loading-overlay hidden"><div class="spinner"></div></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>4BLUE</h1>
+            <p style="font-size: 0.9em; color: #666;">Cálculo de Pró-labore e Equilíbrio</p>
+        </div>
+
+        <div id="view-login">
+            <div class="card">
+                <h3 style="text-align: center; color: var(--blue-primary);">Entrar na sua conta</h3>
+                <label>E-mail</label>
+                <input type="email" id="login-email">
+                <label>Senha</label>
+                <input type="password" id="login-pass">
+                
+                <button class="btn" onclick="doLogin()">Acessar</button>
+                <div class="link" onclick="showView('signup')">Ainda não tem conta? Cadastre-se</div>
+            </div>
+        </div>
+
+        <div id="view-signup" class="hidden">
+            <div class="card">
+                <h3 style="text-align: center; color: var(--blue-primary);">Criar Conta Grátis</h3>
+                
+                <label>Nome Completo</label>
+                <input type="text" id="reg-nome">
+
+                <label>E-mail</label>
+                <input type="email" id="reg-email">
+
+                <label>Senha</label>
+                <input type="password" id="reg-pass">
+
+                <label>Whatsapp</label>
+                <input type="tel" id="reg-zap" placeholder="(00) 00000-0000">
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div>
+                        <label>Sexo</label>
+                        <select id="reg-sexo">
+                            <option value="M">Masculino</option>
+                            <option value="F">Feminino</option>
+                            <option value="O">Outro</option>
+                            <option value="X">Prefiro não informar</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Cargo</label>
+                        <input type="text" id="reg-cargo" placeholder="Ex: Sócio">
+                    </div>
+                </div>
+
+                <label>Nome da Empresa</label>
+                <input type="text" id="reg-empresa">
+
+                <label>Faturamento Mensal</label>
+                <select id="reg-faturamento">
+                    <option value="Menor que 10k">Menor que R$ 10.000</option>
+                    <option value="Entre 10k e 30k">Entre R$ 10k e R$ 30k</option>
+                    <option value="Entre 30k e 60k">Entre R$ 30k e R$ 60k</option>
+                    <option value="Entre 60k e 100k">Entre R$ 60k e R$ 100k</option>
+                    <option value="Entre 100k e 500k">Entre R$ 100k e R$ 500k</option>
+                    <option value="Acima de 500k">Acima de R$ 500.000</option>
+                </select>
+
+                <label>Nº Funcionários</label>
+                <input type="number" id="reg-func">
+
+                <button class="btn" onclick="doSignup()">Cadastrar e Acessar</button>
+                <div class="link" onclick="showView('login')">Já tenho conta</div>
+            </div>
+        </div>
+
+        <div id="view-app" class="hidden">
+            <div class="nav-bar">
+                <div class="nav-user" id="user-display">Olá, Usuário</div>
+                <div style="display: flex; gap: 10px;">
+                    <span class="btn-small" onclick="loadProfileForEdit()">Meu Perfil</span>
+                    <span class="btn-small" style="background:#ffebee; color:red;" onclick="logout()">Sair</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>1. Faturamento</h3>
+                <label>Faturamento Mensal Previsto (R$)</label>
+                <input type="number" id="calc-fat" oninput="calculate()">
+            </div>
+
+            <div class="card">
+                <h3>2. Custos Variáveis (%)</h3>
+                <label>Fornecedores / Matéria-prima</label>
+                <input type="number" id="calc-var1" value="25" oninput="calculate()">
+                
+                <label>Impostos</label>
+                <input type="number" id="calc-var2" value="8.5" oninput="calculate()">
+                
+                <label>Comissão</label>
+                <input type="number" id="calc-var3" value="3.5" oninput="calculate()">
+                
+                <label>Taxa Cartão</label>
+                <input type="number" id="calc-var4" value="1.5" oninput="calculate()">
+                
+                <label>Outros</label>
+                <input type="number" id="calc-var5" value="0" oninput="calculate()">
+            </div>
+
+            <div class="card">
+                <h3>3. Gastos Fixos</h3>
+                <label>Total Fixos (sem Pró-labore)</label>
+                <input type="number" id="calc-fixo" value="35000" oninput="calculate()">
+            </div>
+
+            <button class="btn" onclick="saveData()">SALVAR CÁLCULO</button>
+
+            <div class="result-box">
+                <p>Ponto de Equilíbrio</p>
+                <div class="result-value" id="res-pe">R$ 0,00</div>
+                <hr style="opacity:0.3; margin: 15px 0;">
+                <p>Margem de Contribuição: <strong id="res-mc">0%</strong></p>
+                <p>Gasto Fixo Máximo (Sug.): <strong id="res-gfm">R$ 0,00</strong></p>
+            </div>
+        </div>
+
+        <div id="view-profile" class="hidden">
+            <div class="nav-bar">
+                <h3>Editar Meus Dados</h3>
+                <span class="btn-small" onclick="showView('app')">Voltar</span>
+            </div>
+            
+            <div class="card">
+                <label>Nome</label> <input type="text" id="edit-nome">
+                <label>E-mail</label> <input type="email" id="edit-email">
+                <label>Whatsapp</label> <input type="text" id="edit-zap">
+                <label>Empresa</label> <input type="text" id="edit-empresa">
+                <label>Cargo</label> <input type="text" id="edit-cargo">
+                <label>Senha</label> <input type="text" id="edit-pass">
+                
+                <label>Faturamento Mensal (Atual)</label>
+                <select id="edit-faturamento">
+                    <option value="Menor que 10k">Menor que R$ 10.000</option>
+                    <option value="Entre 10k e 30k">Entre R$ 10k e R$ 30k</option>
+                    <option value="Entre 30k e 60k">Entre R$ 30k e R$ 60k</option>
+                    <option value="Entre 60k e 100k">Entre R$ 60k e R$ 100k</option>
+                    <option value="Entre 100k e 500k">Entre R$ 100k e R$ 500k</option>
+                    <option value="Acima de 500k">Acima de R$ 500.000</option>
+                </select>
+
+                <label>Funcionários</label> <input type="number" id="edit-func">
+
+                <button class="btn" onclick="saveProfile()">Atualizar Cadastro</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // CONFIGURAÇÃO
+        const API_URL = 'COLE_SUA_URL_DO_APPS_SCRIPT_AQUI';
+
+        // STATE
+        let currentUser = localStorage.getItem('4blue_uid');
+        
+        // INIT
+        if(currentUser) {
+            initApp();
+        } else {
+            showView('login');
+        }
+
+        // VIEW MANAGER
+        function showView(viewName) {
+            ['view-login', 'view-signup', 'view-app', 'view-profile'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById('view-' + viewName).classList.remove('hidden');
+            window.scrollTo(0,0);
+        }
+
+        function loading(state) {
+            const el = document.getElementById('loading');
+            state ? el.classList.remove('hidden') : el.classList.add('hidden');
+        }
+
+        // API HELPER
+        async function apiCall(body) {
+            loading(true);
+            try {
+                const req = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(body)
+                });
+                const res = await req.json();
+                loading(false);
+                return res;
+            } catch (e) {
+                loading(false);
+                alert('Erro de conexão: ' + e);
+                return { status: 'error' };
+            }
+        }
+
+        // ACTIONS
+        async function doLogin() {
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-pass').value;
+            
+            const res = await apiCall({ action: 'login', email, password: pass });
+            if (res.status === 'success') {
+                loginSuccess(res.userId, res.name);
+            } else {
+                alert(res.message);
+            }
+        }
+
+        async function doSignup() {
+            // Coletar dados do formulário longo
+            const data = {
+                action: 'signup',
+                nome: document.getElementById('reg-nome').value,
+                email: document.getElementById('reg-email').value,
+                password: document.getElementById('reg-pass').value,
+                whatsapp: document.getElementById('reg-zap').value,
+                sexo: document.getElementById('reg-sexo').value,
+                cargo: document.getElementById('reg-cargo').value,
+                empresa: document.getElementById('reg-empresa').value,
+                faturamento: document.getElementById('reg-faturamento').value,
+                funcionarios: document.getElementById('reg-func').value
+            };
+
+            if(!data.nome || !data.email || !data.password) return alert("Preencha os campos obrigatórios.");
+
+            if(window.fbq) fbq('track', 'CompleteRegistration');
+
+            const res = await apiCall(data);
+            if (res.status === 'success') {
+                alert('Conta criada com sucesso!');
+                loginSuccess(res.userId, res.name);
+            } else {
+                alert(res.message);
+            }
+        }
+
+        function loginSuccess(uid, name) {
+            localStorage.setItem('4blue_uid', uid);
+            localStorage.setItem('4blue_name', name);
+            currentUser = uid;
+            initApp();
+        }
+
+        function logout() {
+            localStorage.clear();
+            location.reload();
+        }
+
+        async function initApp() {
+            document.getElementById('user-display').innerText = 'Olá, ' + localStorage.getItem('4blue_name');
+            showView('app');
+            
+            // Carregar últimos dados do cálculo
+            const res = await apiCall({ action: 'loadCalc', userId: currentUser });
+            if (res.data) {
+                document.getElementById('calc-fat').value = res.data.faturamento;
+                document.getElementById('calc-fixo').value = res.data.gastosFixos;
+                document.getElementById('calc-var1').value = res.data.custoFornecedor;
+                calculate();
+            }
+        }
+
+        // PROFILE LOGIC
+        async function loadProfileForEdit() {
+            const res = await apiCall({ action: 'getProfile', userId: currentUser });
+            if (res.status === 'success') {
+                const p = res.profile;
+                document.getElementById('edit-nome').value = p.nome;
+                document.getElementById('edit-email').value = p.email;
+                document.getElementById('edit-pass').value = p.password;
+                document.getElementById('edit-zap').value = p.whatsapp;
+                document.getElementById('edit-empresa').value = p.empresa;
+                document.getElementById('edit-cargo').value = p.cargo;
+                document.getElementById('edit-faturamento').value = p.faturamento;
+                document.getElementById('edit-func').value = p.funcionarios;
+                showView('profile');
+            }
+        }
+
+        async function saveProfile() {
+            const data = {
+                action: 'updateProfile',
+                userId: currentUser,
+                nome: document.getElementById('edit-nome').value,
+                email: document.getElementById('edit-email').value,
+                password: document.getElementById('edit-pass').value,
+                whatsapp: document.getElementById('edit-zap').value,
+                empresa: document.getElementById('edit-empresa').value,
+                cargo: document.getElementById('edit-cargo').value,
+                faturamento: document.getElementById('edit-faturamento').value,
+                funcionarios: document.getElementById('edit-func').value
+            };
+            const res = await apiCall(data);
+            if(res.status === 'success') {
+                alert('Perfil atualizado!');
+                localStorage.setItem('4blue_name', data.nome); // Atualiza nome local
+                showView('app');
+            } else {
+                alert(res.message);
+            }
+        }
+
+        // CALCULATOR LOGIC
+        function calculate() {
+            const getVal = (id) => parseFloat(document.getElementById(id).value) || 0;
+            
+            const fat = getVal('calc-fat');
+            const fixo = getVal('calc-fixo');
+            
+            const v1 = getVal('calc-var1');
+            const v2 = getVal('calc-var2');
+            const v3 = getVal('calc-var3');
+            const v4 = getVal('calc-var4');
+            const v5 = getVal('calc-var5');
+            
+            const totalVarPct = (v1 + v2 + v3 + v4 + v5);
+            const margemContribuicaoPct = 100 - totalVarPct;
+            
+            let pe = 0;
+            if (margemContribuicaoPct > 0) {
+                pe = fixo / (margemContribuicaoPct / 100);
+            }
+
+            // Gasto fixo máximo (Lógica da planilha: 34% se baseando em um lucro de 20% aprox e variáveis de 46% - simplificado aqui)
+            // A planilha usa uma lógica complexa de goal seeking, vamos usar uma estimativa baseada na MC
+            const gfm = fat * (margemContribuicaoPct/100) * 0.8; // Exemplo: Deixa 20% de margem de lucro operacional
+
+            const fmt = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+            document.getElementById('res-pe').innerText = fmt(pe);
+            document.getElementById('res-mc').innerText = margemContribuicaoPct.toFixed(1) + '%';
+            document.getElementById('res-gfm').innerText = fmt(gfm);
+        }
+
+        async function saveData() {
+             const data = {
+                action: 'saveCalc',
+                userId: currentUser,
+                faturamento: document.getElementById('calc-fat').value,
+                custoFornecedor: document.getElementById('calc-var1').value,
+                impostos: document.getElementById('calc-var2').value,
+                comissao: document.getElementById('calc-var3').value,
+                taxaCartao: document.getElementById('calc-var4').value,
+                outros: document.getElementById('calc-var5').value,
+                gastosFixos: document.getElementById('calc-fixo').value,
+            };
+            
+            // Evento de Lead (Calculou)
+            if(window.fbq) fbq('track', 'Lead');
+
+            await apiCall(data);
+            alert('Cálculo salvo na sua conta!');
+        }
+
+    </script>
+</body>
+</html>
