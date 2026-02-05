@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cálculo Pró-labore | 4blue</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Knockout&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script>
       !function(f,b,e,v,n,t,s)
       {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -16,289 +17,289 @@
       s.parentNode.insertBefore(t,s)}(window, document,'script',
       'https://connect.facebook.net/en_US/fbevents.js');
       
-      // COLOQUE O ID DO SEU PIXEL NO LUGAR DE 'SEU_PIXEL_ID_AQUI'
       fbq('init', 'SEU_PIXEL_ID_AQUI'); 
       fbq('track', 'PageView');
     </script>
+
     <style>
         :root {
             --blue-primary: #0072CE;
             --blue-dark: #004882;
+            --blue-light: #1998FF;
             --bg-light: #F4F5FF;
             --yellow: #F6BF00;
         }
         
         body { font-family: 'Montserrat', sans-serif; background-color: #fff; color: #333; margin: 0; padding: 0; }
-        
         .container { max-width: 500px; margin: 0 auto; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; }
         
-        /* Header */
-        .header { text-align: center; margin-bottom: 30px; padding-top: 20px; }
-        .header h1 { color: var(--blue-primary); font-family: 'Montserrat', sans-serif; margin: 0; font-weight: 800; letter-spacing: -1px; }
+        /* Header & Logo */
+        .header { text-align: center; margin-bottom: 20px; padding-top: 10px; }
+        .logo-img { max-height: 60px; max-width: 200px; object-fit: contain; }
         
-        /* Cards & Forms */
-        .card { background: var(--bg-light); padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        /* Cards */
+        .card { background: var(--bg-light); padding: 20px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #eef0ff; }
+        .card h3 { color: var(--blue-primary); margin-top: 0; font-size: 1.1em; border-bottom: 2px solid #dde1ff; padding-bottom: 10px; }
         
-        label { display: block; margin-top: 15px; font-size: 0.85em; color: var(--blue-dark); font-weight: 700; text-transform: uppercase; }
+        /* Inputs */
+        label { display: block; margin-top: 12px; font-size: 0.85em; color: var(--blue-dark); font-weight: 700; }
+        input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 8px; font-family: 'Montserrat'; box-sizing: border-box; font-size: 1em; }
+        input:focus { border-color: var(--blue-primary); outline: none; }
         
-        input, select { width: 100%; padding: 14px; margin-top: 5px; border: 1px solid #ddd; border-radius: 8px; font-family: 'Montserrat'; box-sizing: border-box; font-size: 1em; background: #fff; }
-        input:focus, select:focus { outline: none; border-color: var(--blue-primary); }
+        /* Buttons */
+        .btn { width: 100%; padding: 15px; background-color: var(--blue-primary); color: white; border: none; border-radius: 50px; font-weight: 700; font-size: 1em; cursor: pointer; margin-top: 20px; text-transform: uppercase; transition: 0.2s; }
+        .btn:hover { background-color: var(--blue-dark); transform: translateY(-2px); }
+        .btn-outline { background: transparent; border: 2px solid var(--blue-primary); color: var(--blue-primary); }
+        .btn-small { padding: 6px 15px; font-size: 0.8em; border-radius: 20px; background: #eee; cursor: pointer; display: inline-block; }
+        
+        /* Results Section */
+        .result-section { background: #fff; border-top: 4px solid var(--yellow); padding: 20px; border-radius: 0 0 15px 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-top: 30px; }
+        .big-result { font-size: 2.2em; font-weight: 800; color: var(--blue-dark); text-align: center; margin: 10px 0; }
+        .sub-result { font-size: 0.9em; color: #666; text-align: center; }
+        .ai-box { background: #f0f7ff; padding: 15px; border-radius: 10px; border-left: 4px solid var(--blue-primary); margin-top: 20px; font-size: 0.9em; line-height: 1.5; font-style: italic; }
 
-        .btn { width: 100%; padding: 16px; background-color: var(--blue-primary); color: white; border: none; border-radius: 50px; font-weight: bold; font-size: 1em; cursor: pointer; margin-top: 25px; transition: transform 0.1s; text-transform: uppercase; letter-spacing: 1px; }
-        .btn:active { transform: scale(0.98); }
-        .btn-outline { background: transparent; border: 2px solid var(--blue-primary); color: var(--blue-primary); margin-top: 10px; }
+        /* Modal / Popups */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,10,0.8); display: flex; justify-content: center; align-items: center; z-index: 2000; backdrop-filter: blur(5px); }
+        .modal-content { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; position: relative; animation: popUp 0.3s ease; }
+        @keyframes popUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 25px; cursor: pointer; color: #999; }
         
-        .link { text-align: center; display: block; margin-top: 15px; color: var(--blue-primary); text-decoration: underline; cursor: pointer; font-size: 0.9em; }
-
-        /* Results */
-        .result-box { background: var(--blue-primary); color: white; padding: 30px; border-radius: 15px; text-align: center; margin-top: 20px; box-shadow: 0 10px 20px rgba(0,114,206,0.2); }
-        .result-value { font-size: 2.5em; font-weight: 800; color: var(--yellow); margin: 10px 0; }
-        
-        /* Utility */
+        /* Utils */
         .hidden { display: none !important; }
-        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); display: flex; justify-content: center; align-items: center; z-index: 999; }
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 999; }
         .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid var(--blue-primary); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .nav-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .nav-user { font-weight: 600; color: var(--blue-dark); }
-        .btn-small { padding: 5px 15px; font-size: 0.8em; border-radius: 20px; background: #eee; cursor: pointer; }
+        /* Welcome Tutorial */
+        .tutorial-step { text-align: center; }
+        .tutorial-img { width: 100%; border-radius: 10px; margin: 15px 0; }
     </style>
 </head>
 <body>
 
-    <div id="loading" class="loading-overlay hidden"><div class="spinner"></div></div>
+    <div id="loading" class="loading-overlay hidden">
+        <div class="spinner"></div>
+        <p style="margin-top:10px; font-weight:600; color: var(--blue-primary);">Processando...</p>
+    </div>
 
-    <div class="container">
+    <div id="cta-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">×</span>
+            
+            <div id="offer-mql" class="hidden">
+                <h2 style="color:var(--blue-dark); font-weight:800; text-transform:uppercase;">Máquina de Lucros</h2>
+                <img src="https://i.ibb.co/rG4VRRBx/MDL-LOGO-2025-17.png" style="max-width:100px; margin-bottom:15px;"> 
+                <p style="font-size:0.95em; color:#555;">Transforme sua empresa em uma MÁQUINA DE LUCROS e multiplique seu salário!</p>
+                <p style="font-size:0.85em;">Com o <strong>MDL</strong>, você tem acesso a mentorias semanais e ferramentas avançadas para resolver desafios de finanças, vendas e processos.</p>
+                <a href="https://4blue.com.br/consultoria-de-gestao-empresarial-mdl/" target="_blank" class="btn" style="display:block; text-decoration:none; background:#00C853;">CONHECER O MDL</a>
+            </div>
+
+            <div id="offer-low" class="hidden">
+                <h2 style="color:var(--blue-dark); font-weight:800;">Quer lucrar mais?</h2>
+                <p>O resultado mostrou que sua empresa tem potencial, mas precisa de ajustes na gestão financeira.</p>
+                <p>Conheça nossos <strong>Cursos Práticos da 4blue</strong> para organizar a casa e sobrar dinheiro no final do mês.</p>
+                <a href="https://4blue.com.br/cursos/" target="_blank" class="btn" style="display:block; text-decoration:none;">VER CURSOS 4BLUE</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-tutorial" class="container hidden" style="justify-content:center; text-align:center;">
+        <h1 style="color:var(--blue-primary);">Bem-vindo!</h1>
+        <p>Antes de começar, veja como usar a calculadora para ter o resultado mais preciso.</p>
+        
+        <div style="background:#f0f0f0; padding:15px; border-radius:10px; margin:20px 0;">
+            <p><strong>📺 Dica Rápida:</strong></p>
+            <a href="https://youtu.be/mF4m3S4_mUE" target="_blank" style="color:var(--blue-dark); text-decoration:underline;">Assista ao tutorial aqui</a>
+        </div>
+
+        <p style="font-size:0.9em;">Você vai precisar dos dados de Faturamento, Custos Variáveis e Gastos Fixos.</p>
+        
+        <button class="btn" onclick="finishTutorial()">COMEÇAR AGORA</button>
+    </div>
+
+    <div class="container" id="main-container">
+        
         <div class="header">
-            <h1>4BLUE</h1>
-            <p style="font-size: 0.9em; color: #666;">Cálculo de Pró-labore e Equilíbrio</p>
+            <img src="https://i.ibb.co/WpBhyhtX/LOGO-2.png" alt="4blue" class="logo-img" onerror="this.src='https://via.placeholder.com/150x50?text=4BLUE'">
         </div>
 
         <div id="view-login">
             <div class="card">
-                <h3 style="text-align: center; color: var(--blue-primary);">Entrar na sua conta</h3>
+                <h3 style="text-align: center;">Acessar Calculadora</h3>
                 <label>E-mail</label>
                 <input type="email" id="login-email">
                 <label>Senha</label>
                 <input type="password" id="login-pass">
-                
-                <button class="btn" onclick="doLogin()">Acessar</button>
-                <div class="link" onclick="showView('signup')">Ainda não tem conta? Cadastre-se</div>
+                <button class="btn" onclick="doLogin()">Entrar</button>
+                <div class="link" onclick="showView('signup')" style="text-align:center; margin-top:15px; color:var(--blue-primary); cursor:pointer; text-decoration:underline;">Criar conta grátis</div>
             </div>
         </div>
 
         <div id="view-signup" class="hidden">
             <div class="card">
-                <h3 style="text-align: center; color: var(--blue-primary);">Criar Conta Grátis</h3>
+                <h3 style="text-align: center;">Cadastro Rápido</h3>
                 
-                <label>Nome Completo</label>
-                <input type="text" id="reg-nome">
-
-                <label>E-mail</label>
-                <input type="email" id="reg-email">
-
-                <label>Senha</label>
-                <input type="password" id="reg-pass">
-
-                <label>Whatsapp</label>
-                <input type="tel" id="reg-zap" placeholder="(DDD) 90000-0000" maxlength="15" onkeyup="handlePhone(event)">
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <div>
-                        <label>Sexo</label>
-                        <select id="reg-sexo">
-                            <option value="M">Masculino</option>
-                            <option value="F">Feminino</option>
-                            <option value="O">Outro</option>
-                            <option value="X">Prefiro não informar</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>Cargo</label>
-                        <input type="text" id="reg-cargo" placeholder="Ex: Sócio">
-                    </div>
+                <label>Nome Completo</label> <input type="text" id="reg-nome">
+                <label>E-mail</label> <input type="email" id="reg-email">
+                <label>Whatsapp</label> <input type="tel" id="reg-zap" onkeyup="handlePhone(event)" placeholder="(00) 00000-0000">
+                <label>Senha</label> <input type="password" id="reg-pass">
+                
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                    <div><label>Sexo</label><select id="reg-sexo"><option value="M">Masc</option><option value="F">Fem</option><option value="O">Outro</option></select></div>
+                    <div><label>Cargo</label><input type="text" id="reg-cargo"></div>
                 </div>
 
-                <label>Nome da Empresa</label>
-                <input type="text" id="reg-empresa">
-
+                <label>Empresa</label> <input type="text" id="reg-empresa">
+                
                 <label>Faturamento Mensal</label>
                 <select id="reg-faturamento">
-                    <option value="Menor que 10k">Menor que R$ 10.000</option>
-                    <option value="Entre 10k e 30k">Entre R$ 10k e R$ 30k</option>
-                    <option value="Entre 30k e 60k">Entre R$ 30k e R$ 60k</option>
-                    <option value="Entre 60k e 100k">Entre R$ 60k e R$ 100k</option>
-                    <option value="Entre 100k e 500k">Entre R$ 100k e R$ 500k</option>
-                    <option value="Acima de 500k">Acima de R$ 500.000</option>
+                    <option value="Menor que 10k">Até R$ 10k</option>
+                    <option value="Entre 10k e 30k">R$ 10k - R$ 30k</option>
+                    <option value="Entre 30k e 60k">R$ 30k - R$ 60k</option>
+                    <option value="Entre 60k e 100k">R$ 60k - R$ 100k</option>
+                    <option value="Entre 100k e 500k">R$ 100k - R$ 500k</option>
+                    <option value="Acima de 500k">Acima de R$ 500k</option>
                 </select>
 
-                <label>Nº Funcionários</label>
-                <input type="number" id="reg-func">
+                <label>Funcionários</label> <input type="number" id="reg-func">
 
-                <button class="btn" onclick="doSignup()">Cadastrar e Acessar</button>
-                <div class="link" onclick="showView('login')">Já tenho conta</div>
+                <button class="btn" onclick="doSignup()">Cadastrar</button>
+                <div class="link" onclick="showView('login')" style="text-align:center; margin-top:15px; cursor:pointer;">Voltar para Login</div>
             </div>
         </div>
 
         <div id="view-app" class="hidden">
-            <div class="nav-bar">
-                <div class="nav-user" id="user-display">Olá, Usuário</div>
-                <div style="display: flex; gap: 10px;">
-                    <span class="btn-small" onclick="loadProfileForEdit()">Meu Perfil</span>
-                    <span class="btn-small" style="background:#ffebee; color:red;" onclick="logout()">Sair</span>
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px; align-items:center;">
+                <span class="nav-user" id="user-display" style="font-weight:bold; color:var(--blue-dark);">Olá!</span>
+                <span class="btn-small" style="background:#ffebee; color:red;" onclick="logout()">Sair</span>
+            </div>
+
+            <div class="card">
+                <h3>Passo 1: Receita</h3>
+                <label>Faturamento Mensal (R$)</label>
+                <input type="number" id="calc-fat" placeholder="Ex: 65000">
+            </div>
+
+            <div class="card">
+                <h3>Passo 2: Custos Variáveis (%)</h3>
+                <label>Fornecedores / Matéria-prima (%)</label> <input type="number" id="calc-var1" value="25">
+                <label>Impostos (%)</label> <input type="number" id="calc-var2" value="8.5">
+                <label>Comissão (%)</label> <input type="number" id="calc-var3" value="3.5">
+                <label>Taxa Cartão (%)</label> <input type="number" id="calc-var4" value="1.5">
+                <label>Outros (%)</label> <input type="number" id="calc-var5" value="0">
+                
+                <hr style="border-top:1px dashed #ccc; margin:15px 0;">
+                
+                <label style="color:var(--blue-primary);">Lucratividade Desejada (%)</label>
+                <input type="number" id="calc-lucro-desejado" placeholder="Ex: 20">
+            </div>
+
+            <div class="card">
+                <h3>Passo 3: Gastos Fixos</h3>
+                <label>Total Gastos Fixos (sem Pró-labore) R$</label>
+                <input type="number" id="calc-fixo" placeholder="Ex: 35000">
+                
+                <label>Seu Pró-labore Atual (Opcional)</label>
+                <input type="number" id="calc-prolabore-atual" placeholder="Quanto retira hoje?">
+            </div>
+
+            <div class="card">
+                <h3>Passo 4: Saídas Não Operacionais</h3>
+                <label>Total de Saídas (Empréstimos, Investimentos) R$</label>
+                <input type="number" id="calc-saidas-nao-op" value="0">
+            </div>
+
+            <button class="btn" onclick="calcularFinal()">CALCULAR PRÓ-LABORE MÁXIMO</button>
+
+            <div id="result-area" class="result-section hidden">
+                <p style="text-align:center; font-weight:600; color:#666; margin:0;">SEU PRÓ-LABORE MÁXIMO É DE:</p>
+                <div class="big-result" id="res-prolabore-max">R$ 0,00</div>
+                
+                <div style="display:flex; justify-content:space-between; margin-top:20px; text-align:center;">
+                    <div style="width:48%;">
+                        <small>Ponto de Equilíbrio</small>
+                        <div style="font-weight:bold; color:var(--blue-primary);" id="res-pe">R$ 0,00</div>
+                    </div>
+                    <div style="width:48%;">
+                        <small>Gasto Fixo Máximo</small>
+                        <div style="font-weight:bold; color:var(--blue-primary);" id="res-gfm">R$ 0,00</div>
+                    </div>
                 </div>
+
+                <div style="margin-top:30px;">
+                    <canvas id="chartResults"></canvas>
+                </div>
+
+                <button class="btn btn-outline" style="margin-top:20px;" onclick="analisarIA()">🤖 Analisar Resultado com IA</button>
+                <div id="ai-response" class="ai-box hidden"></div>
+
+                <button class="btn" style="background-color: #28a745; margin-top:15px;" onclick="saveData()">SALVAR E FINALIZAR</button>
             </div>
 
-            <div class="card">
-                <h3>1. Faturamento</h3>
-                <label>Faturamento Mensal Previsto (R$)</label>
-                <input type="number" id="calc-fat" oninput="calculate()">
-            </div>
-
-            <div class="card">
-                <h3>2. Custos Variáveis (%)</h3>
-                <label>Fornecedores / Matéria-prima</label>
-                <input type="number" id="calc-var1" value="25" oninput="calculate()">
-                
-                <label>Impostos</label>
-                <input type="number" id="calc-var2" value="8.5" oninput="calculate()">
-                
-                <label>Comissão</label>
-                <input type="number" id="calc-var3" value="3.5" oninput="calculate()">
-                
-                <label>Taxa Cartão</label>
-                <input type="number" id="calc-var4" value="1.5" oninput="calculate()">
-                
-                <label>Outros</label>
-                <input type="number" id="calc-var5" value="0" oninput="calculate()">
-            </div>
-
-            <div class="card">
-                <h3>3. Gastos Fixos</h3>
-                <label>Total Fixos (sem Pró-labore)</label>
-                <input type="number" id="calc-fixo" value="35000" oninput="calculate()">
-            </div>
-
-            <button class="btn" onclick="saveData()">SALVAR CÁLCULO</button>
-
-            <div class="result-box">
-                <p>Ponto de Equilíbrio</p>
-                <div class="result-value" id="res-pe">R$ 0,00</div>
-                <hr style="opacity:0.3; margin: 15px 0;">
-                <p>Margem de Contribuição: <strong id="res-mc">0%</strong></p>
-                <p>Gasto Fixo Máximo (Sug.): <strong id="res-gfm">R$ 0,00</strong></p>
-            </div>
         </div>
-
-        <div id="view-profile" class="hidden">
-            <div class="nav-bar">
-                <h3>Editar Meus Dados</h3>
-                <span class="btn-small" onclick="showView('app')">Voltar</span>
-            </div>
-            
-            <div class="card">
-                <label>Nome</label> <input type="text" id="edit-nome">
-                <label>E-mail</label> <input type="email" id="edit-email">
-                <label>Whatsapp</label> <input type="text" id="edit-zap" onkeyup="handlePhone(event)">
-                <label>Empresa</label> <input type="text" id="edit-empresa">
-                <label>Cargo</label> <input type="text" id="edit-cargo">
-                <label>Senha</label> <input type="text" id="edit-pass">
-                
-                <label>Faturamento Mensal (Atual)</label>
-                <select id="edit-faturamento">
-                    <option value="Menor que 10k">Menor que R$ 10.000</option>
-                    <option value="Entre 10k e 30k">Entre R$ 10k e R$ 30k</option>
-                    <option value="Entre 30k e 60k">Entre R$ 30k e R$ 60k</option>
-                    <option value="Entre 60k e 100k">Entre R$ 60k e R$ 100k</option>
-                    <option value="Entre 100k e 500k">Entre R$ 100k e R$ 500k</option>
-                    <option value="Acima de 500k">Acima de R$ 500.000</option>
-                </select>
-
-                <label>Funcionários</label> <input type="number" id="edit-func">
-
-                <button class="btn" onclick="saveProfile()">Atualizar Cadastro</button>
-            </div>
-        </div>
-
     </div>
 
     <script>
-        // =================================================================
-        // COLOQUE AQUI A NOVA URL QUE O GOOGLE GEROU NA ÚLTIMA IMPLANTAÇÃO
-        // =================================================================
+        // ===========================================
+        // CONFIGURAÇÕES
+        // ===========================================
         const API_URL = 'https://script.google.com/macros/s/AKfycbzyoPRVvFtefgu51xlo6-3k1w2wL3O9X9t8bT4iyHLBM1PpH_aHl5ZY9Q2UzzK9AEnA3w/exec';
 
-        // STATE
         let currentUser = localStorage.getItem('4blue_uid');
-        
-        // INIT
-        if(currentUser) {
-            initApp();
-        } else {
-            showView('login');
-        }
+        let currentTag = localStorage.getItem('4blue_tag');
+        let myChart = null;
 
-        // VIEW MANAGER
-        function showView(viewName) {
-            ['view-login', 'view-signup', 'view-app', 'view-profile'].forEach(id => {
-                document.getElementById(id).classList.add('hidden');
-            });
-            document.getElementById('view-' + viewName).classList.remove('hidden');
+        // INIT
+        window.onload = function() {
+            if(currentUser) {
+                initApp();
+            } else {
+                showView('login');
+            }
+        };
+
+        // UI MANAGEMENT
+        function showView(name) {
+            document.querySelectorAll('[id^="view-"]').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.container').forEach(el => el.classList.add('hidden'));
+            
+            if(name === 'tutorial') {
+                document.getElementById('view-tutorial').classList.remove('hidden');
+            } else {
+                document.getElementById('main-container').classList.remove('hidden');
+                document.getElementById('view-' + name).classList.remove('hidden');
+            }
             window.scrollTo(0,0);
         }
 
-        function loading(state) {
-            const el = document.getElementById('loading');
-            state ? el.classList.remove('hidden') : el.classList.add('hidden');
+        function finishTutorial() {
+            localStorage.setItem('4blue_tutorial_seen', 'true');
+            showView('app');
         }
 
-        // MÁSCARA DE TELEFONE (Melhoria de UX)
-        function handlePhone(event) {
-            let input = event.target;
-            input.value = phoneMask(input.value);
-        }
-        function phoneMask(value) {
-            if (!value) return "";
-            value = value.replace(/\D/g,'');
-            value = value.replace(/(\d{2})(\d)/,"($1) $2");
-            value = value.replace(/(\d)(\d{4})$/,"$1-$2");
-            return value;
-        }
-
-        // API HELPER
-        async function apiCall(body) {
-            loading(true);
-            try {
-                const req = await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(body)
-                });
-                const res = await req.json();
-                loading(false);
-                return res;
-            } catch (e) {
-                loading(false);
-                alert('Erro de conexão: ' + e);
-                return { status: 'error' };
-            }
-        }
-
-        // ACTIONS
+        // AUTH
         async function doLogin() {
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-pass').value;
-            
             const res = await apiCall({ action: 'login', email, password: pass });
+            
             if (res.status === 'success') {
-                loginSuccess(res.userId, res.name);
+                localStorage.setItem('4blue_uid', res.userId);
+                localStorage.setItem('4blue_name', res.name);
+                localStorage.setItem('4blue_tag', res.tag);
+                
+                // Verifica se já viu o tutorial
+                if (!localStorage.getItem('4blue_tutorial_seen')) {
+                    showView('tutorial');
+                } else {
+                    initApp();
+                }
             } else {
                 alert(res.message);
             }
         }
 
         async function doSignup() {
-            // Coletar dados do formulário longo
             const data = {
                 action: 'signup',
                 nome: document.getElementById('reg-nome').value,
@@ -311,142 +312,207 @@
                 faturamento: document.getElementById('reg-faturamento').value,
                 funcionarios: document.getElementById('reg-func').value
             };
-
-            if(!data.nome || !data.email || !data.password) return alert("Preencha os campos obrigatórios.");
-
+            if(!data.nome || !data.email || !data.password) return alert("Preencha obrigatórios");
             if(window.fbq) fbq('track', 'CompleteRegistration');
 
             const res = await apiCall(data);
             if (res.status === 'success') {
-                alert('Conta criada com sucesso!');
-                loginSuccess(res.userId, res.name);
+                localStorage.setItem('4blue_uid', res.userId);
+                localStorage.setItem('4blue_name', res.name);
+                localStorage.setItem('4blue_tag', res.tag);
+                showView('tutorial'); // Novo usuário sempre vê tutorial
             } else {
                 alert(res.message);
             }
-        }
-
-        function loginSuccess(uid, name) {
-            localStorage.setItem('4blue_uid', uid);
-            localStorage.setItem('4blue_name', name);
-            currentUser = uid;
-            initApp();
-        }
-
-        function logout() {
-            localStorage.clear();
-            location.reload();
         }
 
         async function initApp() {
+            currentUser = localStorage.getItem('4blue_uid');
+            currentTag = localStorage.getItem('4blue_tag');
             document.getElementById('user-display').innerText = 'Olá, ' + localStorage.getItem('4blue_name');
             showView('app');
             
-            // Carregar últimos dados do cálculo
             const res = await apiCall({ action: 'loadCalc', userId: currentUser });
             if (res.data) {
-                document.getElementById('calc-fat').value = res.data.faturamento;
-                document.getElementById('calc-fixo').value = res.data.gastosFixos;
-                document.getElementById('calc-var1').value = res.data.custoFornecedor;
-                // Carrega o resto para visualização correta
-                document.getElementById('calc-var2').value = res.data.impostos || 8.5;
-                document.getElementById('calc-var3').value = res.data.comissao || 3.5;
-                document.getElementById('calc-var4').value = res.data.taxaCartao || 1.5;
-                document.getElementById('calc-var5').value = res.data.outros || 0;
-                calculate();
+                // Preenche campos
+                const set = (id, val) => document.getElementById(id).value = val || 0;
+                set('calc-fat', res.data.faturamento);
+                set('calc-var1', res.data.custoFornecedor);
+                set('calc-var2', res.data.impostos);
+                set('calc-var3', res.data.comissao);
+                set('calc-var4', res.data.taxaCartao);
+                set('calc-var5', res.data.outros);
+                set('calc-fixo', res.data.gastosFixos);
+                set('calc-lucro-desejado', res.data.lucratividade);
+                set('calc-prolabore-atual', res.data.proLaboreRetirado);
+                set('calc-saidas-nao-op', res.data.saidasNaoOp);
             }
         }
 
-        // PROFILE LOGIC
-        async function loadProfileForEdit() {
-            const res = await apiCall({ action: 'getProfile', userId: currentUser });
-            if (res.status === 'success') {
-                const p = res.profile;
-                document.getElementById('edit-nome').value = p.nome;
-                document.getElementById('edit-email').value = p.email;
-                document.getElementById('edit-pass').value = p.password;
-                document.getElementById('edit-zap').value = p.whatsapp;
-                document.getElementById('edit-empresa').value = p.empresa;
-                document.getElementById('edit-cargo').value = p.cargo;
-                document.getElementById('edit-faturamento').value = p.faturamento;
-                document.getElementById('edit-func').value = p.funcionarios;
-                showView('profile');
-            }
-        }
+        function logout() { localStorage.clear(); location.reload(); }
 
-        async function saveProfile() {
-            const data = {
-                action: 'updateProfile',
-                userId: currentUser,
-                nome: document.getElementById('edit-nome').value,
-                email: document.getElementById('edit-email').value,
-                password: document.getElementById('edit-pass').value,
-                whatsapp: document.getElementById('edit-zap').value,
-                empresa: document.getElementById('edit-empresa').value,
-                cargo: document.getElementById('edit-cargo').value,
-                faturamento: document.getElementById('edit-faturamento').value,
-                funcionarios: document.getElementById('edit-func').value
-            };
-            const res = await apiCall(data);
-            if(res.status === 'success') {
-                alert('Perfil atualizado!');
-                localStorage.setItem('4blue_name', data.nome); // Atualiza nome local
-                showView('app');
-            } else {
-                alert(res.message);
-            }
-        }
-
-        // CALCULATOR LOGIC
-        function calculate() {
-            const getVal = (id) => parseFloat(document.getElementById(id).value) || 0;
-            
+        // CÁLCULO CORE
+        function getVal(id) { return parseFloat(document.getElementById(id).value) || 0; }
+        
+        function calcularFinal() {
+            // Inputs
             const fat = getVal('calc-fat');
+            const totalVarPct = getVal('calc-var1') + getVal('calc-var2') + getVal('calc-var3') + getVal('calc-var4') + getVal('calc-var5');
+            const mcPct = 100 - totalVarPct;
+            
+            const lucroDesejadoPct = getVal('calc-lucro-desejado');
             const fixo = getVal('calc-fixo');
+            const saidasNaoOp = getVal('calc-saidas-nao-op');
             
-            const v1 = getVal('calc-var1');
-            const v2 = getVal('calc-var2');
-            const v3 = getVal('calc-var3');
-            const v4 = getVal('calc-var4');
-            const v5 = getVal('calc-var5');
-            
-            const totalVarPct = (v1 + v2 + v3 + v4 + v5);
-            const margemContribuicaoPct = 100 - totalVarPct;
-            
+            // 1. Ponto de Equilíbrio (Valor que paga os custos)
+            // PE = Custos Fixos / MC%
             let pe = 0;
-            if (margemContribuicaoPct > 0) {
-                pe = fixo / (margemContribuicaoPct / 100);
-            }
+            if (mcPct > 0) pe = fixo / (mcPct / 100);
 
-            // Gasto fixo máximo (Lógica da planilha: 34% se baseando em um lucro de 20% aprox e variáveis de 46% - simplificado aqui)
-            // A planilha usa uma lógica complexa de goal seeking, vamos usar uma estimativa baseada na MC
-            const gfm = fat * (margemContribuicaoPct/100) * 0.8; // Exemplo: Deixa 20% de margem de lucro operacional
+            // 2. Gasto Fixo Máximo (O quanto a empresa pode gastar fixo para atingir o lucro desejado)
+            // Receita Disponível = Fat * MC%
+            // Sobra Necessária = Fat * LucroDesejado% + SaídasNaoOp
+            // GastoFixoMax = ReceitaDisponível - SobraNecessária
+            const receitaMargem = fat * (mcPct / 100);
+            const lucroAlvo = fat * (lucroDesejadoPct / 100);
+            const gastoFixoMax = receitaMargem - lucroAlvo - saidasNaoOp;
 
-            const fmt = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            // 3. Pró-labore Máximo
+            // É a diferença entre o Gasto Fixo Máximo (que inclui o Pro labore) e o Gasto Fixo Atual (sem pro labore)
+            // Se GastoFixoMax = R$ 40k e GastoFixoAtual = R$ 35k -> Pro labore pode ser R$ 5k.
+            let proLaboreMax = gastoFixoMax - fixo;
 
+            // Renderiza
+            const fmt = v => v.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
             document.getElementById('res-pe').innerText = fmt(pe);
-            document.getElementById('res-mc').innerText = margemContribuicaoPct.toFixed(1) + '%';
-            document.getElementById('res-gfm').innerText = fmt(gfm);
+            document.getElementById('res-gfm').innerText = fmt(gastoFixoMax);
+            
+            const elPL = document.getElementById('res-prolabore-max');
+            elPL.innerText = fmt(proLaboreMax);
+            elPL.style.color = proLaboreMax >= 0 ? '#0072CE' : '#D32F2F';
+
+            document.getElementById('result-area').classList.remove('hidden');
+            
+            renderChart(fixo, proLaboreMax, lucroAlvo, saidasNaoOp);
+            
+            // Scroll suave até o resultado
+            document.getElementById('result-area').scrollIntoView({ behavior: 'smooth' });
         }
 
+        // GRÁFICOS
+        function renderChart(fixo, prolabore, lucro, naoOp) {
+            const ctx = document.getElementById('chartResults').getContext('2d');
+            if(myChart) myChart.destroy();
+
+            // Se prolabore for negativo, ajustamos para zero no gráfico para não quebrar a pizza, mas ele aparece vermelho no texto
+            const plChart = prolabore > 0 ? prolabore : 0;
+
+            myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Gastos Fixos', 'Seu Pró-labore (Max)', 'Lucro Desejado', 'Saídas Não Op.'],
+                    datasets: [{
+                        data: [fixo, plChart, lucro, naoOp],
+                        backgroundColor: ['#b0bec5', '#0072CE', '#F6BF00', '#ef5350'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        title: { display: true, text: 'Distribuição Ideal da Receita' }
+                    }
+                }
+            });
+        }
+
+        // IA
+        async function analisarIA() {
+            const btn = document.querySelector('.btn-outline');
+            const box = document.getElementById('ai-response');
+            
+            btn.innerText = "Pensando...";
+            btn.disabled = true;
+            
+            const data = {
+                action: 'analyzeAI',
+                fat: document.getElementById('calc-fat').value,
+                mc: 100 - (getVal('calc-var1') + getVal('calc-var2') + getVal('calc-var3') + getVal('calc-var4') + getVal('calc-var5')),
+                fixo: document.getElementById('calc-fixo').value,
+                lucro: document.getElementById('calc-lucro-desejado').value,
+                proLaboreMax: document.getElementById('res-prolabore-max').innerText,
+                proLaboreAtual: document.getElementById('calc-prolabore-atual').value
+            };
+
+            const res = await apiCall(data);
+            
+            box.innerText = res.text || "Erro ao analisar.";
+            box.classList.remove('hidden');
+            btn.innerText = "🤖 Analisar Resultado com IA";
+            btn.disabled = false;
+        }
+
+        // SALVAR E MOSTRAR OFERTA
         async function saveData() {
-             const data = {
+            const data = {
                 action: 'saveCalc',
                 userId: currentUser,
-                faturamento: document.getElementById('calc-fat').value,
-                custoFornecedor: document.getElementById('calc-var1').value,
-                impostos: document.getElementById('calc-var2').value,
-                comissao: document.getElementById('calc-var3').value,
-                taxaCartao: document.getElementById('calc-var4').value,
-                outros: document.getElementById('calc-var5').value,
-                gastosFixos: document.getElementById('calc-fixo').value,
+                faturamento: getVal('calc-fat'),
+                custoFornecedor: getVal('calc-var1'),
+                impostos: getVal('calc-var2'),
+                comissao: getVal('calc-var3'),
+                taxaCartao: getVal('calc-var4'),
+                outros: getVal('calc-var5'),
+                gastosFixos: getVal('calc-fixo'),
+                lucratividade: getVal('calc-lucro-desejado'),
+                proLaboreRetirado: getVal('calc-prolabore-atual'),
+                saidasNaoOp: getVal('calc-saidas-nao-op')
             };
-            
-            // Evento de Lead (Calculou)
-            if(window.fbq) fbq('track', 'Lead');
 
-            await apiCall(data);
-            alert('Cálculo salvo na sua conta!');
+            if(window.fbq) fbq('track', 'Lead');
+            await apiCall(data); // Salva no Google Sheets
+            
+            // Abre Modal de Oferta
+            openModalOferta();
         }
+
+        function openModalOferta() {
+            const modal = document.getElementById('cta-modal');
+            const isMQL = currentTag && currentTag.includes('mql') && !currentTag.includes('nao-mql');
+            
+            // Se a tag for 'calculo-pro-labore-4blue-mql' mostra MDL
+            if (isMQL) {
+                document.getElementById('offer-mql').classList.remove('hidden');
+                document.getElementById('offer-low').classList.add('hidden');
+            } else {
+                document.getElementById('offer-mql').classList.add('hidden');
+                document.getElementById('offer-low').classList.remove('hidden');
+            }
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('cta-modal').classList.add('hidden');
+        }
+
+        // API
+        async function apiCall(body) {
+            document.getElementById('loading').classList.remove('hidden');
+            try {
+                const req = await fetch(API_URL, { method: 'POST', body: JSON.stringify(body) });
+                const res = await req.json();
+                document.getElementById('loading').classList.add('hidden');
+                return res;
+            } catch (e) {
+                document.getElementById('loading').classList.add('hidden');
+                alert('Erro: ' + e);
+                return { status: 'error' };
+            }
+        }
+        
+        function handlePhone(e) { e.target.value = e.target.value.replace(/\D/g,'').replace(/(\d{2})(\d)/,"($1) $2").replace(/(\d)(\d{4})$/,"$1-$2"); }
+
     </script>
 </body>
 </html>
