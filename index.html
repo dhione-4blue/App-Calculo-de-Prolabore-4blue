@@ -22,64 +22,50 @@
     </script>
 
     <style>
-        :root {
-            --blue-primary: #0072CE;
-            --blue-dark: #004882;
-            --blue-light: #1998FF;
-            --bg-light: #F4F5FF;
-            --yellow: #F6BF00;
-        }
-        
+        :root { --blue-primary: #0072CE; --blue-dark: #004882; --bg-light: #F4F5FF; --yellow: #F6BF00; }
         body { font-family: 'Montserrat', sans-serif; background-color: #fff; color: #333; margin: 0; padding: 0; }
         .container { max-width: 500px; margin: 0 auto; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; }
         
-        /* Header & Logo */
         .header { text-align: center; margin-bottom: 20px; padding-top: 10px; }
         .logo-img { max-height: 60px; max-width: 200px; object-fit: contain; }
         
-        /* Cards */
         .card { background: var(--bg-light); padding: 20px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #eef0ff; }
         .card h3 { color: var(--blue-primary); margin-top: 0; font-size: 1.1em; border-bottom: 2px solid #dde1ff; padding-bottom: 10px; }
         
-        /* Inputs */
         label { display: block; margin-top: 12px; font-size: 0.85em; color: var(--blue-dark); font-weight: 700; }
         input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 8px; font-family: 'Montserrat'; box-sizing: border-box; font-size: 1em; }
         input:focus { border-color: var(--blue-primary); outline: none; }
         
-        /* Buttons */
         .btn { width: 100%; padding: 15px; background-color: var(--blue-primary); color: white; border: none; border-radius: 50px; font-weight: 700; font-size: 1em; cursor: pointer; margin-top: 20px; text-transform: uppercase; transition: 0.2s; }
         .btn:hover { background-color: var(--blue-dark); transform: translateY(-2px); }
         .btn-outline { background: transparent; border: 2px solid var(--blue-primary); color: var(--blue-primary); }
-        .btn-small { padding: 6px 15px; font-size: 0.8em; border-radius: 20px; background: #eee; cursor: pointer; display: inline-block; }
+        .btn-small { padding: 6px 12px; font-size: 0.75em; border-radius: 20px; background: #eee; cursor: pointer; display: inline-block; white-space: nowrap; }
         
-        /* Results Section */
         .result-section { background: #fff; border-top: 4px solid var(--yellow); padding: 20px; border-radius: 0 0 15px 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-top: 30px; }
         .big-result { font-size: 2.2em; font-weight: 800; color: var(--blue-dark); text-align: center; margin: 10px 0; }
-        .sub-result { font-size: 0.9em; color: #666; text-align: center; }
-        .ai-box { background: #f0f7ff; padding: 15px; border-radius: 10px; border-left: 4px solid var(--blue-primary); margin-top: 20px; font-size: 0.9em; line-height: 1.5; font-style: italic; }
+        .ai-box { background: #f0f7ff; padding: 15px; border-radius: 10px; border-left: 4px solid var(--blue-primary); margin-top: 20px; font-size: 0.9em; font-style: italic; }
 
-        /* Modal / Popups */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,10,0.8); display: flex; justify-content: center; align-items: center; z-index: 2000; backdrop-filter: blur(5px); }
         .modal-content { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; position: relative; animation: popUp 0.3s ease; }
         @keyframes popUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .close-modal { position: absolute; top: 15px; right: 20px; font-size: 25px; cursor: pointer; color: #999; }
         
-        /* Utils */
         .hidden { display: none !important; }
         .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 999; }
         .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid var(--blue-primary); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* Welcome Tutorial */
-        .tutorial-step { text-align: center; }
-        .tutorial-img { width: 100%; border-radius: 10px; margin: 15px 0; }
+        
+        /* History Items */
+        .history-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #eee; }
+        .history-date { font-size: 0.8em; color: #888; }
+        .history-val { font-weight: bold; color: var(--blue-primary); }
     </style>
 </head>
 <body>
 
     <div id="loading" class="loading-overlay hidden">
         <div class="spinner"></div>
-        <p style="margin-top:10px; font-weight:600; color: var(--blue-primary);">Processando...</p>
+        <p style="margin-top:10px; font-weight:600; color: var(--blue-primary);">Carregando...</p>
     </div>
 
     <div id="cta-modal" class="modal-overlay hidden">
@@ -88,16 +74,14 @@
             
             <div id="offer-mql" class="hidden">
                 <h2 style="color:var(--blue-dark); font-weight:800; text-transform:uppercase;">Máquina de Lucros</h2>
-                <img src="https://i.ibb.co/rG4VRRBx/MDL-LOGO-2025-17.png" style="max-width:100px; margin-bottom:15px;"> 
+                <img src="https://i.ibb.co/TBmsxxQ4/image.png" style="max-width:100px; margin-bottom:15px;"> 
                 <p style="font-size:0.95em; color:#555;">Transforme sua empresa em uma MÁQUINA DE LUCROS e multiplique seu salário!</p>
-                <p style="font-size:0.85em;">Com o <strong>MDL</strong>, você tem acesso a mentorias semanais e ferramentas avançadas para resolver desafios de finanças, vendas e processos.</p>
                 <a href="https://4blue.com.br/consultoria-de-gestao-empresarial-mdl/" target="_blank" class="btn" style="display:block; text-decoration:none; background:#00C853;">CONHECER O MDL</a>
             </div>
 
             <div id="offer-low" class="hidden">
                 <h2 style="color:var(--blue-dark); font-weight:800;">Quer lucrar mais?</h2>
                 <p>O resultado mostrou que sua empresa tem potencial, mas precisa de ajustes na gestão financeira.</p>
-                <p>Conheça nossos <strong>Cursos Práticos da 4blue</strong> para organizar a casa e sobrar dinheiro no final do mês.</p>
                 <a href="https://4blue.com.br/cursos/" target="_blank" class="btn" style="display:block; text-decoration:none;">VER CURSOS 4BLUE</a>
             </div>
         </div>
@@ -106,30 +90,23 @@
     <div id="view-tutorial" class="container hidden" style="justify-content:center; text-align:center;">
         <h1 style="color:var(--blue-primary);">Bem-vindo!</h1>
         <p>Antes de começar, veja como usar a calculadora para ter o resultado mais preciso.</p>
-        
         <div style="background:#f0f0f0; padding:15px; border-radius:10px; margin:20px 0;">
             <p><strong>📺 Dica Rápida:</strong></p>
             <a href="https://youtu.be/mF4m3S4_mUE" target="_blank" style="color:var(--blue-dark); text-decoration:underline;">Assista ao tutorial aqui</a>
         </div>
-
-        <p style="font-size:0.9em;">Você vai precisar dos dados de Faturamento, Custos Variáveis e Gastos Fixos.</p>
-        
         <button class="btn" onclick="finishTutorial()">COMEÇAR AGORA</button>
     </div>
 
     <div class="container" id="main-container">
-        
         <div class="header">
-            <img src="https://i.ibb.co/WpBhyhtX/LOGO-2.png" alt="4blue" class="logo-img" onerror="this.src='https://via.placeholder.com/150x50?text=4BLUE'">
+            <img src="https://i.ibb.co/gFt2T2V8/logo.png" alt="4blue" class="logo-img" onerror="this.src='https://via.placeholder.com/150x50?text=4BLUE'">
         </div>
 
         <div id="view-login">
             <div class="card">
                 <h3 style="text-align: center;">Acessar Calculadora</h3>
-                <label>E-mail</label>
-                <input type="email" id="login-email">
-                <label>Senha</label>
-                <input type="password" id="login-pass">
+                <label>E-mail</label> <input type="email" id="login-email">
+                <label>Senha</label> <input type="password" id="login-pass">
                 <button class="btn" onclick="doLogin()">Entrar</button>
                 <div class="link" onclick="showView('signup')" style="text-align:center; margin-top:15px; color:var(--blue-primary); cursor:pointer; text-decoration:underline;">Criar conta grátis</div>
             </div>
@@ -138,19 +115,15 @@
         <div id="view-signup" class="hidden">
             <div class="card">
                 <h3 style="text-align: center;">Cadastro Rápido</h3>
-                
                 <label>Nome Completo</label> <input type="text" id="reg-nome">
                 <label>E-mail</label> <input type="email" id="reg-email">
-                <label>Whatsapp</label> <input type="tel" id="reg-zap" onkeyup="handlePhone(event)" placeholder="(00) 00000-0000">
+                <label>Whatsapp</label> <input type="tel" id="reg-zap" onkeyup="handlePhone(event)">
                 <label>Senha</label> <input type="password" id="reg-pass">
-                
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                    <div><label>Sexo</label><select id="reg-sexo"><option value="M">Masc</option><option value="F">Fem</option><option value="O">Outro</option></select></div>
+                    <div><label>Sexo</label><select id="reg-sexo"><option value="M">Masc</option><option value="F">Fem</option></select></div>
                     <div><label>Cargo</label><input type="text" id="reg-cargo"></div>
                 </div>
-
                 <label>Empresa</label> <input type="text" id="reg-empresa">
-                
                 <label>Faturamento Mensal</label>
                 <select id="reg-faturamento">
                     <option value="Menor que 10k">Até R$ 10k</option>
@@ -160,18 +133,17 @@
                     <option value="Entre 100k e 500k">R$ 100k - R$ 500k</option>
                     <option value="Acima de 500k">Acima de R$ 500k</option>
                 </select>
-
                 <label>Funcionários</label> <input type="number" id="reg-func">
-
                 <button class="btn" onclick="doSignup()">Cadastrar</button>
-                <div class="link" onclick="showView('login')" style="text-align:center; margin-top:15px; cursor:pointer;">Voltar para Login</div>
+                <div class="link" onclick="showView('login')" style="text-align:center; margin-top:15px; cursor:pointer;">Voltar</div>
             </div>
         </div>
 
         <div id="view-app" class="hidden">
             <div style="display:flex; justify-content:space-between; margin-bottom:15px; align-items:center;">
-                <span class="nav-user" id="user-display" style="font-weight:bold; color:var(--blue-dark);">Olá!</span>
-                <div style="display: flex; gap: 8px;">
+                <span id="user-display" style="font-weight:bold; color:var(--blue-dark); font-size:0.9em;">Olá!</span>
+                <div style="display: flex; gap: 5px;">
+                    <span class="btn-small" onclick="loadHistory()">Histórico</span>
                     <span class="btn-small" onclick="loadProfileForEdit()">Meu Perfil</span>
                     <span class="btn-small" style="background:#ffebee; color:red;" onclick="logout()">Sair</span>
                 </div>
@@ -179,8 +151,7 @@
 
             <div class="card">
                 <h3>Passo 1: Receita</h3>
-                <label>Faturamento Mensal (R$)</label>
-                <input type="number" id="calc-fat" placeholder="Ex: 65000">
+                <label>Faturamento Mensal (R$)</label> <input type="number" id="calc-fat" placeholder="Ex: 65000">
             </div>
 
             <div class="card">
@@ -190,26 +161,19 @@
                 <label>Comissão (%)</label> <input type="number" id="calc-var3" value="3.5">
                 <label>Taxa Cartão (%)</label> <input type="number" id="calc-var4" value="1.5">
                 <label>Outros (%)</label> <input type="number" id="calc-var5" value="0">
-                
                 <hr style="border-top:1px dashed #ccc; margin:15px 0;">
-                
-                <label style="color:var(--blue-primary);">Lucratividade Desejada (%)</label>
-                <input type="number" id="calc-lucro-desejado" placeholder="Ex: 20">
+                <label style="color:var(--blue-primary);">Lucratividade Desejada (%)</label> <input type="number" id="calc-lucro-desejado" placeholder="Ex: 20">
             </div>
 
             <div class="card">
                 <h3>Passo 3: Gastos Fixos</h3>
-                <label>Total Gastos Fixos (sem Pró-labore) R$</label>
-                <input type="number" id="calc-fixo" placeholder="Ex: 35000">
-                
-                <label>Seu Pró-labore Atual (Opcional)</label>
-                <input type="number" id="calc-prolabore-atual" placeholder="Quanto retira hoje?">
+                <label>Total Gastos Fixos (sem Pró-labore) R$</label> <input type="number" id="calc-fixo" placeholder="Ex: 35000">
+                <label>Seu Pró-labore Atual (Opcional)</label> <input type="number" id="calc-prolabore-atual">
             </div>
 
             <div class="card">
                 <h3>Passo 4: Saídas Não Operacionais</h3>
-                <label>Total de Saídas (Empréstimos, Investimentos) R$</label>
-                <input type="number" id="calc-saidas-nao-op" value="0">
+                <label>Total de Saídas R$</label> <input type="number" id="calc-saidas-nao-op" value="0">
             </div>
 
             <button class="btn" onclick="calcularFinal()">CALCULAR PRÓ-LABORE MÁXIMO</button>
@@ -217,117 +181,96 @@
             <div id="result-area" class="result-section hidden">
                 <p style="text-align:center; font-weight:600; color:#666; margin:0;">SEU PRÓ-LABORE MÁXIMO É DE:</p>
                 <div class="big-result" id="res-prolabore-max">R$ 0,00</div>
-                
                 <div style="display:flex; justify-content:space-between; margin-top:20px; text-align:center;">
-                    <div style="width:48%;">
-                        <small>Ponto de Equilíbrio</small>
-                        <div style="font-weight:bold; color:var(--blue-primary);" id="res-pe">R$ 0,00</div>
-                    </div>
-                    <div style="width:48%;">
-                        <small>Gasto Fixo Máximo</small>
-                        <div style="font-weight:bold; color:var(--blue-primary);" id="res-gfm">R$ 0,00</div>
-                    </div>
+                    <div style="width:48%;"> <small>Ponto de Equilíbrio</small> <div style="font-weight:bold; color:var(--blue-primary);" id="res-pe">R$ 0,00</div> </div>
+                    <div style="width:48%;"> <small>Gasto Fixo Máximo</small> <div style="font-weight:bold; color:var(--blue-primary);" id="res-gfm">R$ 0,00</div> </div>
                 </div>
-
-                <div style="margin-top:30px;">
-                    <canvas id="chartResults"></canvas>
-                </div>
-
+                <div style="margin-top:30px;"> <canvas id="chartResults"></canvas> </div>
                 <button class="btn btn-outline" style="margin-top:20px;" onclick="analisarIA()">🤖 Analisar Resultado com IA</button>
                 <div id="ai-response" class="ai-box hidden"></div>
-
                 <button class="btn" style="background-color: #28a745; margin-top:15px;" onclick="saveData()">SALVAR E FINALIZAR</button>
             </div>
+        </div>
 
-            <div id="view-profile" class="hidden">
+        <div id="view-profile" class="hidden">
             <div style="display:flex; justify-content:space-between; margin-bottom:15px; align-items:center;">
-                <h3>Editar Meus Dados</h3>
+                <h3>Editar Dados</h3>
                 <span class="btn-small" onclick="showView('app')">Voltar</span>
             </div>
-            
             <div class="card">
                 <label>Nome</label> <input type="text" id="edit-nome">
                 <label>E-mail</label> <input type="email" id="edit-email">
                 <label>Whatsapp</label> <input type="text" id="edit-zap" onkeyup="handlePhone(event)">
+                
                 <label>Empresa</label> <input type="text" id="edit-empresa">
                 <label>Cargo</label> <input type="text" id="edit-cargo">
                 <label>Senha</label> <input type="text" id="edit-pass">
-                
+
                 <label>Faturamento Mensal (Atual)</label>
                 <select id="edit-faturamento">
-                    <option value="Menor que 10k">Menor que R$ 10.000</option>
-                    <option value="Entre 10k e 30k">Entre R$ 10k e R$ 30k</option>
-                    <option value="Entre 30k e 60k">Entre R$ 30k e R$ 60k</option>
-                    <option value="Entre 60k e 100k">Entre R$ 60k e R$ 100k</option>
-                    <option value="Entre 100k e 500k">Entre R$ 100k e R$ 500k</option>
-                    <option value="Acima de 500k">Acima de R$ 500.000</option>
+                    <option value="Menor que 10k">Até R$ 10k</option>
+                    <option value="Entre 10k e 30k">R$ 10k - R$ 30k</option>
+                    <option value="Entre 30k e 60k">R$ 30k - R$ 60k</option>
+                    <option value="Entre 60k e 100k">R$ 60k - R$ 100k</option>
+                    <option value="Entre 100k e 500k">R$ 100k - R$ 500k</option>
+                    <option value="Acima de 500k">Acima de R$ 500k</option>
                 </select>
 
                 <label>Funcionários</label> <input type="number" id="edit-func">
 
-                <button class="btn" onclick="saveProfile()">Atualizar Cadastro</button>
+                <button class="btn" onclick="saveProfile()">Salvar Alterações</button>
+            </div>
+        </div>
+
+        <div id="view-history" class="hidden">
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px; align-items:center;">
+                <h3>Meus Cálculos Anteriores</h3>
+                <span class="btn-small" onclick="showView('app')">Voltar</span>
+            </div>
+            <div id="history-list" class="card" style="padding:0;">
+                <p style="padding:20px; text-align:center;">Carregando...</p>
             </div>
         </div>
     </div>
 
     <script>
         // ===========================================
-        // CONFIGURAÇÕES
+        // IMPORTANTE: VOCÊ VAI PRECISAR ATUALIZAR ESSA URL DEPOIS
+        // QUANDO EU TE MANDAR O CÓDIGO DO BACKEND. 
+        // POR ENQUANTO, PODE MANTER A QUE ESTÁ OU COLOCAR A NOVA SE JÁ TIVER.
         // ===========================================
-        const API_URL = 'https://script.google.com/macros/s/AKfycbzyoPRVvFtefgu51xlo6-3k1w2wL3O9X9t8bT4iyHLBM1PpH_aHl5ZY9Q2UzzK9AEnA3w/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzyoPRVvFtefgu51xlo6-3k1w2wL3O9X9t8bT4iyHLBM1PpH_aHl5ZY9Q2UzzK9AEnA3w/exec'; 
 
         let currentUser = localStorage.getItem('4blue_uid');
         let currentTag = localStorage.getItem('4blue_tag');
         let myChart = null;
 
-        // INIT
         window.onload = function() {
-            if(currentUser) {
-                initApp();
-            } else {
-                showView('login');
-            }
+            if(currentUser) { initApp(); } else { showView('login'); }
         };
 
-        // UI MANAGEMENT
         function showView(name) {
             document.querySelectorAll('[id^="view-"]').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.container').forEach(el => el.classList.add('hidden'));
-            
-            if(name === 'tutorial') {
-                document.getElementById('view-tutorial').classList.remove('hidden');
-            } else {
+            if(name === 'tutorial') document.getElementById('view-tutorial').classList.remove('hidden');
+            else {
                 document.getElementById('main-container').classList.remove('hidden');
                 document.getElementById('view-' + name).classList.remove('hidden');
             }
             window.scrollTo(0,0);
         }
 
-        function finishTutorial() {
-            localStorage.setItem('4blue_tutorial_seen', 'true');
-            showView('app');
-        }
+        function finishTutorial() { localStorage.setItem('4blue_tutorial_seen', 'true'); showView('app'); }
 
-        // AUTH
         async function doLogin() {
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-pass').value;
             const res = await apiCall({ action: 'login', email, password: pass });
-            
             if (res.status === 'success') {
-                localStorage.setItem('4blue_uid', res.userId);
-                localStorage.setItem('4blue_name', res.name);
-                localStorage.setItem('4blue_tag', res.tag);
-                
-                // Verifica se já viu o tutorial
-                if (!localStorage.getItem('4blue_tutorial_seen')) {
-                    showView('tutorial');
-                } else {
-                    initApp();
-                }
-            } else {
-                alert(res.message);
-            }
+                loginSuccess(res);
+                if (!localStorage.getItem('4blue_tutorial_seen')) showView('tutorial');
+                else initApp();
+            } else alert(res.message);
         }
 
         async function doSignup() {
@@ -343,29 +286,26 @@
                 faturamento: document.getElementById('reg-faturamento').value,
                 funcionarios: document.getElementById('reg-func').value
             };
-            if(!data.nome || !data.email || !data.password) return alert("Preencha obrigatórios");
+            if(!data.nome || !data.email) return alert("Preencha tudo");
             if(window.fbq) fbq('track', 'CompleteRegistration');
-
             const res = await apiCall(data);
-            if (res.status === 'success') {
-                localStorage.setItem('4blue_uid', res.userId);
-                localStorage.setItem('4blue_name', res.name);
-                localStorage.setItem('4blue_tag', res.tag);
-                showView('tutorial'); // Novo usuário sempre vê tutorial
-            } else {
-                alert(res.message);
-            }
+            if (res.status === 'success') { loginSuccess(res); showView('tutorial'); }
+            else alert(res.message);
+        }
+
+        function loginSuccess(res) {
+            localStorage.setItem('4blue_uid', res.userId);
+            localStorage.setItem('4blue_name', res.name);
+            localStorage.setItem('4blue_tag', res.tag);
+            currentUser = res.userId;
+            currentTag = res.tag;
         }
 
         async function initApp() {
-            currentUser = localStorage.getItem('4blue_uid');
-            currentTag = localStorage.getItem('4blue_tag');
             document.getElementById('user-display').innerText = 'Olá, ' + localStorage.getItem('4blue_name');
             showView('app');
-            
             const res = await apiCall({ action: 'loadCalc', userId: currentUser });
             if (res.data) {
-                // Preenche campos
                 const set = (id, val) => document.getElementById(id).value = val || 0;
                 set('calc-fat', res.data.faturamento);
                 set('calc-var1', res.data.custoFornecedor);
@@ -381,187 +321,149 @@
         }
 
         async function loadProfileForEdit() {
+            document.getElementById('loading').classList.remove('hidden');
             const res = await apiCall({ action: 'getProfile', userId: currentUser });
+            document.getElementById('loading').classList.add('hidden');
             if (res.status === 'success') {
                 const p = res.profile;
-                document.getElementById('edit-nome').value = p.nome;
-                document.getElementById('edit-email').value = p.email;
-                document.getElementById('edit-pass').value = p.password;
-                document.getElementById('edit-zap').value = p.whatsapp;
-                document.getElementById('edit-empresa').value = p.empresa;
-                document.getElementById('edit-cargo').value = p.cargo;
-                document.getElementById('edit-faturamento').value = p.faturamento;
-                document.getElementById('edit-func').value = p.funcionarios;
+                const set = (id, val) => document.getElementById(id).value = val;
+                // Preenchendo todos os campos
+                set('edit-nome', p.nome); set('edit-email', p.email); set('edit-pass', p.password);
+                set('edit-zap', p.whatsapp); set('edit-faturamento', p.faturamento);
+                set('edit-empresa', p.empresa); set('edit-cargo', p.cargo); set('edit-func', p.funcionarios);
                 showView('profile');
             }
         }
 
         async function saveProfile() {
             const data = {
-                action: 'updateProfile',
-                userId: currentUser,
+                action: 'updateProfile', userId: currentUser,
                 nome: document.getElementById('edit-nome').value,
                 email: document.getElementById('edit-email').value,
                 password: document.getElementById('edit-pass').value,
                 whatsapp: document.getElementById('edit-zap').value,
+                faturamento: document.getElementById('edit-faturamento').value,
+                // Campos restaurados
                 empresa: document.getElementById('edit-empresa').value,
                 cargo: document.getElementById('edit-cargo').value,
-                faturamento: document.getElementById('edit-faturamento').value,
                 funcionarios: document.getElementById('edit-func').value
             };
             const res = await apiCall(data);
             if(res.status === 'success') {
-                alert('Perfil atualizado com sucesso!');
+                alert('Atualizado!');
                 localStorage.setItem('4blue_name', data.nome);
-                
-                // Atualiza a TAG localmente se o faturamento mudou, para o pop-up vir correto
                 const highValue = ['Entre 100k e 500k', 'Acima de 500k'];
-                if (highValue.includes(data.faturamento)) {
-                    currentTag = "calculo-pro-labore-4blue-mql";
-                } else {
-                    currentTag = "calculo-pro-labore-4blue-nao-mql";
-                }
+                currentTag = highValue.includes(data.faturamento) ? "calculo-pro-labore-4blue-mql" : "calculo-pro-labore-4blue-nao-mql";
                 localStorage.setItem('4blue_tag', currentTag);
-                
                 showView('app');
+            } else alert(res.message);
+        }
+
+        async function loadHistory() {
+            showView('history');
+            const list = document.getElementById('history-list');
+            list.innerHTML = '<p style="padding:20px; text-align:center;">Carregando...</p>';
+            
+            const res = await apiCall({ action: 'getHistory', userId: currentUser });
+            if(res.status === 'success' && res.history.length > 0) {
+                list.innerHTML = '';
+                res.history.forEach((item, idx) => {
+                    const dateObj = new Date(item.date);
+                    const dateStr = dateObj.toLocaleDateString('pt-BR');
+                    const valStr = item.plMax.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+                    
+                    list.innerHTML += `
+                    <div class="history-item">
+                        <div>
+                            <div style="font-weight:bold;">Cálculo ${res.history.length - idx}</div>
+                            <div class="history-date">${dateStr} - Fat: R$ ${item.fat}</div>
+                        </div>
+                        <div class="history-val">${valStr}</div>
+                    </div>`;
+                });
             } else {
-                alert(res.message);
+                list.innerHTML = '<p style="padding:20px; text-align:center;">Nenhum cálculo salvo ainda.</p>';
             }
         }
 
-        function logout() { localStorage.clear(); location.reload(); }
-
-        // CÁLCULO CORE
-        function getVal(id) { return parseFloat(document.getElementById(id).value) || 0; }
-        
         function calcularFinal() {
-            // Inputs
+            const getVal = (id) => parseFloat(document.getElementById(id).value) || 0;
             const fat = getVal('calc-fat');
             const totalVarPct = getVal('calc-var1') + getVal('calc-var2') + getVal('calc-var3') + getVal('calc-var4') + getVal('calc-var5');
             const mcPct = 100 - totalVarPct;
-            
             const lucroDesejadoPct = getVal('calc-lucro-desejado');
             const fixo = getVal('calc-fixo');
             const saidasNaoOp = getVal('calc-saidas-nao-op');
             
-            // 1. Ponto de Equilíbrio (Valor que paga os custos)
-            // PE = Custos Fixos / MC%
-            let pe = 0;
-            if (mcPct > 0) pe = fixo / (mcPct / 100);
-
-            // 2. Gasto Fixo Máximo (O quanto a empresa pode gastar fixo para atingir o lucro desejado)
-            // Receita Disponível = Fat * MC%
-            // Sobra Necessária = Fat * LucroDesejado% + SaídasNaoOp
-            // GastoFixoMax = ReceitaDisponível - SobraNecessária
+            let pe = 0; if (mcPct > 0) pe = fixo / (mcPct / 100);
             const receitaMargem = fat * (mcPct / 100);
             const lucroAlvo = fat * (lucroDesejadoPct / 100);
             const gastoFixoMax = receitaMargem - lucroAlvo - saidasNaoOp;
-
-            // 3. Pró-labore Máximo
-            // É a diferença entre o Gasto Fixo Máximo (que inclui o Pro labore) e o Gasto Fixo Atual (sem pro labore)
-            // Se GastoFixoMax = R$ 40k e GastoFixoAtual = R$ 35k -> Pro labore pode ser R$ 5k.
             let proLaboreMax = gastoFixoMax - fixo;
 
-            // Renderiza
             const fmt = v => v.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
             document.getElementById('res-pe').innerText = fmt(pe);
             document.getElementById('res-gfm').innerText = fmt(gastoFixoMax);
-            
             const elPL = document.getElementById('res-prolabore-max');
             elPL.innerText = fmt(proLaboreMax);
             elPL.style.color = proLaboreMax >= 0 ? '#0072CE' : '#D32F2F';
 
             document.getElementById('result-area').classList.remove('hidden');
-            
             renderChart(fixo, proLaboreMax, lucroAlvo, saidasNaoOp);
-            
-            // Scroll suave até o resultado
             document.getElementById('result-area').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // GRÁFICOS
         function renderChart(fixo, prolabore, lucro, naoOp) {
             const ctx = document.getElementById('chartResults').getContext('2d');
             if(myChart) myChart.destroy();
-
-            // Se prolabore for negativo, ajustamos para zero no gráfico para não quebrar a pizza, mas ele aparece vermelho no texto
-            const plChart = prolabore > 0 ? prolabore : 0;
-
             myChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Gastos Fixos', 'Seu Pró-labore (Max)', 'Lucro Desejado', 'Saídas Não Op.'],
+                    labels: ['Gastos Fixos', 'Seu Pró-labore', 'Lucro Desejado', 'Saídas Não Op.'],
                     datasets: [{
-                        data: [fixo, plChart, lucro, naoOp],
-                        backgroundColor: ['#b0bec5', '#0072CE', '#F6BF00', '#ef5350'],
-                        borderWidth: 0
+                        data: [fixo, prolabore > 0 ? prolabore : 0, lucro, naoOp],
+                        backgroundColor: ['#b0bec5', '#0072CE', '#F6BF00', '#ef5350'], borderWidth: 0
                     }]
                 },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { position: 'bottom' },
-                        title: { display: true, text: 'Distribuição Ideal da Receita' }
-                    }
-                }
+                options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
             });
         }
 
-        // IA
         async function analisarIA() {
             const btn = document.querySelector('.btn-outline');
             const box = document.getElementById('ai-response');
-            
-            btn.innerText = "Pensando...";
-            btn.disabled = true;
-            
+            btn.innerText = "Pensando..."; btn.disabled = true;
             const data = {
                 action: 'analyzeAI',
                 fat: document.getElementById('calc-fat').value,
-                mc: 100 - (getVal('calc-var1') + getVal('calc-var2') + getVal('calc-var3') + getVal('calc-var4') + getVal('calc-var5')),
+                mc: 100 - (parseFloat(document.getElementById('calc-var1').value)||0) * 5,
                 fixo: document.getElementById('calc-fixo').value,
                 lucro: document.getElementById('calc-lucro-desejado').value,
-                proLaboreMax: document.getElementById('res-prolabore-max').innerText,
-                proLaboreAtual: document.getElementById('calc-prolabore-atual').value
+                proLaboreMax: document.getElementById('res-prolabore-max').innerText
             };
-
             const res = await apiCall(data);
-            
-            box.innerText = res.text || "Erro ao analisar.";
-            box.classList.remove('hidden');
-            btn.innerText = "🤖 Analisar Resultado com IA";
-            btn.disabled = false;
+            box.innerText = res.text || "Erro."; box.classList.remove('hidden');
+            btn.innerText = "🤖 Analisar Resultado com IA"; btn.disabled = false;
         }
 
-        // SALVAR E MOSTRAR OFERTA
         async function saveData() {
+            const getVal = (id) => parseFloat(document.getElementById(id).value) || 0;
             const data = {
-                action: 'saveCalc',
-                userId: currentUser,
-                faturamento: getVal('calc-fat'),
-                custoFornecedor: getVal('calc-var1'),
-                impostos: getVal('calc-var2'),
-                comissao: getVal('calc-var3'),
-                taxaCartao: getVal('calc-var4'),
-                outros: getVal('calc-var5'),
-                gastosFixos: getVal('calc-fixo'),
-                lucratividade: getVal('calc-lucro-desejado'),
-                proLaboreRetirado: getVal('calc-prolabore-atual'),
-                saidasNaoOp: getVal('calc-saidas-nao-op')
+                action: 'saveCalc', userId: currentUser,
+                faturamento: getVal('calc-fat'), custoFornecedor: getVal('calc-var1'),
+                impostos: getVal('calc-var2'), comissao: getVal('calc-var3'),
+                taxaCartao: getVal('calc-var4'), outros: getVal('calc-var5'),
+                gastosFixos: getVal('calc-fixo'), lucratividade: getVal('calc-lucro-desejado'),
+                proLaboreRetirado: getVal('calc-prolabore-atual'), saidasNaoOp: getVal('calc-saidas-nao-op')
             };
-
             if(window.fbq) fbq('track', 'Lead');
-            await apiCall(data); // Salva no Google Sheets
-            
-            // Abre Modal de Oferta
+            await apiCall(data);
             openModalOferta();
         }
 
         function openModalOferta() {
             const modal = document.getElementById('cta-modal');
-            
-            // CORREÇÃO: Comparação exata para evitar confusão entre 'mql' e 'nao-mql'
-            // Se a tag for EXATAMENTE a de mql, ele é MQL. Caso contrário, é Não-MQL.
+            // Lógica MQL corrigida: Exige que seja estritamente igual à tag MQL
             const isMQL = currentTag === "calculo-pro-labore-4blue-mql";
             
             if (isMQL) {
@@ -574,11 +476,9 @@
             modal.classList.remove('hidden');
         }
 
-        function closeModal() {
-            document.getElementById('cta-modal').classList.add('hidden');
-        }
-
-        // API
+        function closeModal() { document.getElementById('cta-modal').classList.add('hidden'); }
+        function logout() { localStorage.clear(); location.reload(); }
+        
         async function apiCall(body) {
             document.getElementById('loading').classList.remove('hidden');
             try {
@@ -588,13 +488,11 @@
                 return res;
             } catch (e) {
                 document.getElementById('loading').classList.add('hidden');
-                alert('Erro: ' + e);
+                alert('Erro conexão');
                 return { status: 'error' };
             }
         }
-        
         function handlePhone(e) { e.target.value = e.target.value.replace(/\D/g,'').replace(/(\d{2})(\d)/,"($1) $2").replace(/(\d)(\d{4})$/,"$1-$2"); }
-
     </script>
 </body>
 </html>
