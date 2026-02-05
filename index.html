@@ -15,10 +15,11 @@
       t.src=v;s=b.getElementsByTagName(e)[0];
       s.parentNode.insertBefore(t,s)}(window, document,'script',
       'https://connect.facebook.net/en_US/fbevents.js');
-      fbq('init', 'SEU_PIXEL_ID_AQUI');
+      
+      // COLOQUE O ID DO SEU PIXEL NO LUGAR DE 'SEU_PIXEL_ID_AQUI'
+      fbq('init', 'SEU_PIXEL_ID_AQUI'); 
       fbq('track', 'PageView');
     </script>
-
     <style>
         :root {
             --blue-primary: #0072CE;
@@ -101,7 +102,7 @@
                 <input type="password" id="reg-pass">
 
                 <label>Whatsapp</label>
-                <input type="tel" id="reg-zap" placeholder="(00) 00000-0000">
+                <input type="tel" id="reg-zap" placeholder="(DDD) 90000-0000" maxlength="15" onkeyup="handlePhone(event)">
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                     <div>
@@ -199,7 +200,7 @@
             <div class="card">
                 <label>Nome</label> <input type="text" id="edit-nome">
                 <label>E-mail</label> <input type="email" id="edit-email">
-                <label>Whatsapp</label> <input type="text" id="edit-zap">
+                <label>Whatsapp</label> <input type="text" id="edit-zap" onkeyup="handlePhone(event)">
                 <label>Empresa</label> <input type="text" id="edit-empresa">
                 <label>Cargo</label> <input type="text" id="edit-cargo">
                 <label>Senha</label> <input type="text" id="edit-pass">
@@ -223,7 +224,9 @@
     </div>
 
     <script>
-        // CONFIGURAÇÃO
+        // =================================================================
+        // COLOQUE AQUI A NOVA URL QUE O GOOGLE GEROU NA ÚLTIMA IMPLANTAÇÃO
+        // =================================================================
         const API_URL = 'https://script.google.com/macros/s/AKfycbzyoPRVvFtefgu51xlo6-3k1w2wL3O9X9t8bT4iyHLBM1PpH_aHl5ZY9Q2UzzK9AEnA3w/exec';
 
         // STATE
@@ -248,6 +251,19 @@
         function loading(state) {
             const el = document.getElementById('loading');
             state ? el.classList.remove('hidden') : el.classList.add('hidden');
+        }
+
+        // MÁSCARA DE TELEFONE (Melhoria de UX)
+        function handlePhone(event) {
+            let input = event.target;
+            input.value = phoneMask(input.value);
+        }
+        function phoneMask(value) {
+            if (!value) return "";
+            value = value.replace(/\D/g,'');
+            value = value.replace(/(\d{2})(\d)/,"($1) $2");
+            value = value.replace(/(\d)(\d{4})$/,"$1-$2");
+            return value;
         }
 
         // API HELPER
@@ -331,6 +347,11 @@
                 document.getElementById('calc-fat').value = res.data.faturamento;
                 document.getElementById('calc-fixo').value = res.data.gastosFixos;
                 document.getElementById('calc-var1').value = res.data.custoFornecedor;
+                // Carrega o resto para visualização correta
+                document.getElementById('calc-var2').value = res.data.impostos || 8.5;
+                document.getElementById('calc-var3').value = res.data.comissao || 3.5;
+                document.getElementById('calc-var4').value = res.data.taxaCartao || 1.5;
+                document.getElementById('calc-var5').value = res.data.outros || 0;
                 calculate();
             }
         }
@@ -426,7 +447,6 @@
             await apiCall(data);
             alert('Cálculo salvo na sua conta!');
         }
-
     </script>
 </body>
 </html>
